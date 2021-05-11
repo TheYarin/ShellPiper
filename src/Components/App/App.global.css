@@ -1,0 +1,24 @@
+/*
+ * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ *        See https://github.com/webpack-contrib/sass-loader#imports
+ */
+body {
+  height: 100vh;
+
+  /* min-height: min-content; */ /*I'm not sure this one actually do anything*/
+  /* min-width: min-content; */
+
+  font-family: sans-serif;
+  overflow-y: hidden;
+
+  margin: 0;
+}
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+div[tabindex="-1"]:focus,
+pre[tabindex="-1"]:focus {
+  outline: 0;
+} /*because MousetrapWrapper's `tabIndex=-1` causes an annoying outline to appear*/

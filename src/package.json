@@ -1,0 +1,16 @@
+{
+  "name": "shell-piper",
+  "productName": "ShellPiper",
+  "description": "The shell piping editor",
+  "version": "1.0.0",
+  "main": "./main.prod.js",
+  "author": {
+    "name": "Yarin",
+    "url": "https://github.com/TheYarin"
+  },
+  "scripts": {
+    "electron-rebuild": "node -r ../.erb/scripts/BabelRegister.js ../.erb/scripts/ElectronRebuild.js",
+    "postinstall": "yarn electron-rebuild"
+  },
+  "dependencies": {}
+}
