@@ -1,3 +1,5 @@
+/* eslint-disable react/no-this-in-sfc */
+
 import { clipboard } from "electron";
 import fs from "fs";
 
@@ -40,11 +42,11 @@ export function doesFileExist(path: string): boolean {
 //   return chunks;
 // }
 
-//#region Array prototype overrides
+// #region Array prototype overrides
 
 declare global {
   interface Array<T> {
-    insert(index: number, item: any): void;
+    insert(index: number, item: T): void;
     removeByIndex(index: number): void;
     skip(predicate: (item: T) => boolean): [Array<T>, number];
 
@@ -62,29 +64,29 @@ declare global {
      */
     findLastIndex(predicate: (item: T, index: number) => boolean): number | null;
 
-    splitByPredicate(predicate: (item: T, index: number) => boolean): [T[] /*true*/, T[] /*false*/];
+    splitByPredicate(predicate: (item: T, index: number) => boolean): [T[] /* true */, T[] /* false */];
   }
 }
 
-Array.prototype.insert = function (index: number, item: any) {
+Array.prototype.insert = function ArrayInsert<T>(index: number, item: T) {
   this.splice(index, 0, item);
 };
 
-Array.prototype.removeByIndex = function (index: number) {
+Array.prototype.removeByIndex = function ArrayRemoveByIndex(index: number) {
   this.splice(index, 1);
 };
 
-Array.prototype.isEmpty = function () {
+Array.prototype.isEmpty = function ArrayIsEmpty() {
   return this.length === 0;
 };
 
-Array.prototype.indexOfLastItem = function () {
+Array.prototype.indexOfLastItem = function ArrayIndexOfLastItem() {
   if (this.isEmpty()) throw new Error("Can't get you the index of the last item, the array is empty.");
 
   return this.length - 1;
 };
 
-Array.prototype.skip = function <T>(predicate: (item: T) => boolean): [Array<T>, number] {
+Array.prototype.skip = function ArraySkip<T>(predicate: (item: T) => boolean): [Array<T>, number] {
   for (let i = 0; i < this.length; i++) {
     const item = this[i];
 
@@ -94,30 +96,30 @@ Array.prototype.skip = function <T>(predicate: (item: T) => boolean): [Array<T>,
   return [[], this.length];
 };
 
-Array.prototype.lastOrUndefined = function () {
+Array.prototype.lastOrUndefined = function ArrayLastOrUndefined() {
   return this[this.length - 1];
 };
 
-Array.prototype.last = function () {
+Array.prototype.last = function ArrayLast() {
   if (this.isEmpty()) throw new Error("Last item could not be retrieved, array is empty.");
 
   return this[this.length - 1];
 };
 
 // Copied from https://stackoverflow.com/a/14853974/7009364
-Array.prototype.equals = function (array) {
+Array.prototype.equals = function ArrayEquals(array) {
   // if the other array is a falsy value, return
   if (!array) return false;
 
   // compare lengths - can save a lot of time
-  if (this.length != array.length) return false;
+  if (this.length !== array.length) return false;
 
-  for (var i = 0, l = this.length; i < l; i++) {
+  for (let i = 0, l = this.length; i < l; i++) {
     // Check if we have nested arrays
     if (this[i] instanceof Array && array[i] instanceof Array) {
       // recurse into the nested arrays
       if (!this[i].equals(array[i])) return false;
-    } else if (this[i] != array[i]) {
+    } else if (this[i] !== array[i]) {
       // Warning - two different object instances will never be equal: {x:20} != {x:20}
       return false;
     }
@@ -125,7 +127,7 @@ Array.prototype.equals = function (array) {
   return true;
 };
 
-Array.prototype.findLastIndex = function <T>(predicate: (item: T, index: number) => boolean) {
+Array.prototype.findLastIndex = function ArrayFindLastIndex<T>(predicate: (item: T, index: number) => boolean) {
   for (let i = this.indexOfLastItem(); i >= 0; i--) {
     const item = this[i];
 
@@ -135,7 +137,7 @@ Array.prototype.findLastIndex = function <T>(predicate: (item: T, index: number)
   return null;
 };
 
-Array.prototype.splitByPredicate = function <T>(predicate: (item: T, index: number) => boolean) {
+Array.prototype.splitByPredicate = function ArraySplitByPredicate<T>(predicate: (item: T, index: number) => boolean) {
   const trues = [];
   const falses = [];
   for (let i = 0; i < this.length; i++) {
@@ -148,4 +150,4 @@ Array.prototype.splitByPredicate = function <T>(predicate: (item: T, index: numb
   return [trues, falses];
 };
 
-//#endregion
+// #endregion

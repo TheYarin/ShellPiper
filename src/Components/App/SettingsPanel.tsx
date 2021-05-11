@@ -1,30 +1,18 @@
-import {
-  Button,
-  Checkbox,
-  Collapse,
-  FormControlLabel,
-  makeStyles,
-  Paper,
-  TextField,
-  Theme,
-} from '@material-ui/core';
-import {
-  ExpandMore as ExpandMoreIcon,
-  Settings as SettingsIcon,
-} from '@material-ui/icons';
-import clsx from 'clsx';
-import { observer } from 'mobx-react';
-import React, { useState } from 'react';
-import { flexCol, spaceChildren } from '../../JssUtils';
-import { piperStore } from '../../PiperStore';
-import { doesDirectoryExist, doesFileExist } from '../../utils';
-import HelpPopup from '../Common/HelpPopup';
-import BrowseButton from './BrowseButton';
+import { Button, Checkbox, Collapse, FormControlLabel, makeStyles, Paper, TextField, Theme } from "@material-ui/core";
+import { ExpandMore as ExpandMoreIcon, Settings as SettingsIcon } from "@material-ui/icons";
+import clsx from "clsx";
+import { observer } from "mobx-react";
+import React, { useState } from "react";
+import { flexCol, spaceChildren } from "../../JssUtils";
+import { piperStore } from "../../PiperStore";
+import { doesDirectoryExist, doesFileExist } from "../../utils";
+import HelpPopup from "../Common/HelpPopup";
+import BrowseButton from "./BrowseButton";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: '15px 5px',
-    position: 'relative',
+    padding: "15px 5px",
+    position: "relative",
     marginBottom: 20,
     paddingBottom: 25,
     ...flexCol,
@@ -33,25 +21,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderTopRightRadius: 0,
   },
   expandArrow: {
-    transition: theme.transitions.create('transform', {
+    transition: theme.transitions.create("transform", {
       duration: theme.transitions.duration.shortest,
     }),
   },
   expandButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
 
     // Align to the center
     left: 0,
     right: 0,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    textAlign: 'center',
+    marginLeft: "auto",
+    marginRight: "auto",
+    textAlign: "center",
 
     // Make it exceed the parent justttt right
-    transform: 'translateY(50%)',
+    transform: "translateY(50%)",
 
-    backgroundColor: '#f7f7f7',
+    backgroundColor: "#f7f7f7",
     borderRadius: 9999, // Couldn't find a more elegant way
 
     paddingLeft: 5,
@@ -60,15 +48,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   expandedPart: {
     marginTop: 15,
     ...flexCol,
-    ...spaceChildren(15, 'vertically'),
+    ...spaceChildren(15, "vertically"),
   },
   rotated: {
-    transform: 'rotate(-180deg)',
+    transform: "rotate(-180deg)",
   },
   killCheckboxContainer: {
     paddingLeft: 5,
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
   },
   checkboxFormControllLabel: {
     marginRight: 4,
@@ -76,41 +64,39 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const SettingsPanel = observer(() => {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const [panelExpanded, setPanelExpanded] = useState(false);
 
   const cls = useStyles();
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const workingDirectoryDoesntExist =
-    piperStore.workingDirectory !== undefined &&
-    !doesDirectoryExist(piperStore.workingDirectory);
+    piperStore.workingDirectory !== undefined && !doesDirectoryExist(piperStore.workingDirectory);
 
-  const shellProgramExists =
-    piperStore.shellProgram !== undefined &&
-    !doesFileExist(piperStore.shellProgram);
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const shellProgramExists = piperStore.shellProgram !== undefined && !doesFileExist(piperStore.shellProgram);
 
   return (
     <Paper className={cls.root} elevation={4}>
       <TextField
         label="Working Directory"
         variant="outlined"
-        value={piperStore.workingDirectory || ''}
-        onChange={(e) =>
-          (piperStore.workingDirectory = e.target.value || undefined)
-        }
+        value={piperStore.workingDirectory || ""}
+        onChange={(e) => {
+          piperStore.workingDirectory = e.target.value || undefined;
+        }}
         error={workingDirectoryDoesntExist}
-        helperText={
-          workingDirectoryDoesntExist ? "This directory doesn't exist." : ''
-        }
+        helperText={workingDirectoryDoesntExist ? "This directory doesn't exist." : ""}
         inputProps={{ tabIndex: 1 }}
         InputProps={{
           endAdornment: (
             <BrowseButton
               dialogOptions={{
-                properties: ['openDirectory'],
+                properties: ["openDirectory"],
               }}
-              onValue={(ret) =>
-                (piperStore.workingDirectory = ret.filePaths[0])
-              }
+              onValue={(ret) => {
+                piperStore.workingDirectory = ret.filePaths[0];
+              }}
             />
           ),
         }}
@@ -120,22 +106,22 @@ const SettingsPanel = observer(() => {
           <TextField
             label="Shell Program"
             variant="outlined"
-            value={piperStore.shellProgram || ''}
-            onChange={(e) =>
-              (piperStore.shellProgram = e.target.value || undefined)
-            }
+            value={piperStore.shellProgram || ""}
+            onChange={(e) => {
+              piperStore.shellProgram = e.target.value || undefined;
+            }}
             error={shellProgramExists}
-            helperText={shellProgramExists ? "This file doesn't exist." : ''}
+            helperText={shellProgramExists ? "This file doesn't exist." : ""}
             inputProps={{ tabIndex: 1 }}
             InputProps={{
               endAdornment: (
                 <BrowseButton
                   dialogOptions={{
-                    properties: ['openFile'],
+                    properties: ["openFile"],
                   }}
-                  onValue={(ret) =>
-                    (piperStore.shellProgram = ret.filePaths[0])
-                  }
+                  onValue={(ret) => {
+                    piperStore.shellProgram = ret.filePaths[0];
+                  }}
                 />
               ),
             }}
@@ -143,10 +129,10 @@ const SettingsPanel = observer(() => {
           <TextField
             label="Path environment variable"
             variant="outlined"
-            value={piperStore.pathEnvVar || ''}
-            onChange={(e) =>
-              (piperStore.pathEnvVar = e.target.value || undefined)
-            }
+            value={piperStore.pathEnvVar || ""}
+            onChange={(e) => {
+              piperStore.pathEnvVar = e.target.value || undefined;
+            }}
             inputProps={{ tabIndex: 1 }}
           />
           <div className={cls.killCheckboxContainer}>
@@ -156,9 +142,9 @@ const SettingsPanel = observer(() => {
                 <Checkbox
                   checked={piperStore.killPredecessorOnClose}
                   color="primary"
-                  onChange={(e) =>
-                    (piperStore.killPredecessorOnClose = e.target.checked)
-                  }
+                  onChange={(e) => {
+                    piperStore.killPredecessorOnClose = e.target.checked;
+                  }}
                 />
               }
               label="Kill preceding command(s) when a command is done"
@@ -170,16 +156,9 @@ const SettingsPanel = observer(() => {
           </div>
         </div>
       </Collapse>
-      <Button
-        className={cls.expandButton}
-        variant="contained"
-        onClick={() => setPanelExpanded(!panelExpanded)}
-        disableRipple
-      >
+      <Button className={cls.expandButton} variant="contained" onClick={() => setPanelExpanded(!panelExpanded)} disableRipple>
         <SettingsIcon />
-        <ExpandMoreIcon
-          className={clsx(cls.expandArrow, panelExpanded && cls.rotated)}
-        />
+        <ExpandMoreIcon className={clsx(cls.expandArrow, panelExpanded && cls.rotated)} />
       </Button>
     </Paper>
   );

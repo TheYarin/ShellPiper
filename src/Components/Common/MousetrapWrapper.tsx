@@ -10,7 +10,9 @@ export default function MousetrapWrapper({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const mousetrap = Mousetrap(ref.current!);
+    if (!ref.current) throw new Error("This shouldn't happen, `ref.current` shouldn't be null once the component is mounted.");
+
+    const mousetrap = Mousetrap(ref.current);
 
     for (const [shortcut, handler] of shortcutsAndHandlers) {
       mousetrap.bind(shortcut, handler);

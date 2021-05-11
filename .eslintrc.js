@@ -29,7 +29,48 @@ module.exports = {
     "import/prefer-default-export": "off",
     "@typescript-eslint/lines-between-class-members": "warn",
     "@typescript-eslint/no-inferrable-types": "warn",
-    yoda: ["never", { exceptRange: true }],
+
+    // ShellPiper eslint adjustments
+    yoda: ["warn", "never", { exceptRange: true }],
+    "no-underscore-dangle": ["error", { allowAfterThis: true }],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
+    "no-extend-native": "off", // Extending the lame native prototype is highly encouraged
+    "no-plusplus": ["error", { allowForLoopAfterthoughts: true }],
+    "react/jsx-props-no-spreading": "off",
+    "react/jsx-no-duplicate-props": ["error", { ignoreCase: false }],
+    "no-alert": "off",
+    "no-multi-assign": ["warn", { ignoreNonDeclaration: true }],
+    "prefer-destructuring": [
+      "warn",
+      {
+        array: false,
+        object: true,
+      },
+      {
+        enforceForRenamedProperties: false,
+      },
+    ],
+    "@typescript-eslint/naming-convention": [
+      "warn",
+      {
+        // Enforce that boolean variables are prefixed with an allowed verb
+        selector: "variable",
+        types: ["boolean"],
+        format: ["PascalCase"],
+        prefix: ["is", "should", "has", "can", "did", "will"],
+      },
+      {
+        // Allow underscore for parameters (indicates unused)
+        selector: "parameter",
+        format: ["camelCase"],
+        leadingUnderscore: "allow",
+      },
+    ],
+    "prettier/prettier": "warn",
+    "import/no-cycle": "warn",
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-console": ["warn", { allow: ["warn", "error"] }],
   },
   parserOptions: {
     ecmaVersion: 2020,

@@ -1,18 +1,16 @@
-import OutputPanel from "./OutputPanel";
 import { Divider, makeStyles, ThemeProvider } from "@material-ui/core";
-import { Observer } from "mobx-react";
 import React from "react";
+import ResizePanel from "react-resize-panel";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { flexCol } from "../../JssUtils";
+import { piperStore } from "../../PiperStore";
+import MousetrapWrapper from "../Common/MousetrapWrapper";
+import { theme } from "../ThemeStuff/theme";
 // import icon from '../assets/icon.svg';
 import "./App.global.css";
-import { piperStore } from "../../PiperStore";
 import CommandsPanel from "./CommandsPanel/CommandsPanel";
+import OutputPanel from "./OutputPanel";
 import SettingsPanel from "./SettingsPanel";
-import { flexCol } from "../../JssUtils";
-import { theme } from "../ThemeStuff/theme";
-import ResizePanel from "react-resize-panel";
-
-import MousetrapWrapper from "../Common/MousetrapWrapper";
 
 const maxWidthOfCommandsPanel = 800;
 
@@ -73,6 +71,7 @@ const Main = () => {
                 if (e.ctrlKey) {
                   const windowAny = window as any;
                   windowAny.piperStore = windowAny.ps = piperStore;
+                  // eslint-disable-next-line no-console
                   console.log(`piperStore set: `, piperStore);
                 }
               }}

@@ -1,35 +1,39 @@
-import crypto from "crypto";
-
 import { ChildProcess, exec } from "child_process";
+import crypto from "crypto";
 import { action, makeAutoObservable } from "mobx";
-import { PiperStore } from "./PiperStore";
-import CommandStatus from "./CommandStatus";
-import treeKill from "tree-kill";
 import React from "react";
+import treeKill from "tree-kill";
+import CommandStatus from "./CommandStatus";
+// eslint-disable-next-line import/no-cycle
+import { PiperStore } from "./PiperStore";
 
 export default class Command {
-  //#region id property
+  // #region id property
 
   private _id = crypto.randomBytes(16).toString("hex");
+
   public get id(): string {
     return this._id;
   }
 
-  //#endregion
+  // #endregion
 
-  //#region commandText
+  // #region commandText
 
-  private _commandText: string = "";
+  private _commandText = "";
+
   public get commandText(): string {
     return this._commandText;
   }
+
   public set commandText(v: string) {
     this._commandText = v;
   }
 
-  //#endregion
+  // #endregion
 
   stdout?: string = undefined;
+
   stderr?: string = undefined;
 
   /**
@@ -45,21 +49,24 @@ export default class Command {
 
   private _piperStore: PiperStore;
 
-  //#region skipThisCommand
+  // #region skipThisCommand
 
-  private _skipThisCommand: boolean = false;
+  private _skipThisCommand = false;
+
   public get skipThisCommand(): boolean {
     return this._skipThisCommand;
   }
+
   public set skipThisCommand(v: boolean) {
     this._skipThisCommand = v;
   }
 
-  //#endregion
+  // #endregion
 
-  //#region Execution error
+  // #region Execution error
 
   private _executionError: string | undefined;
+
   public get executionError(): string | undefined {
     return this._executionError;
   }
@@ -67,9 +74,9 @@ export default class Command {
   //   this._executionError = v;
   // }
 
-  //#endregion
+  // #endregion
 
-  //#region status property
+  // #region status property
 
   /**
    * Status is managed independently for two reasons:
@@ -77,9 +84,11 @@ export default class Command {
    * 2. So Mobx can work it's magic with the status, which would probable not be straight-forward if the value was managed by the ChildProcess class.
    */
   private _status: CommandStatus = CommandStatus.NEW;
+
   public get status(): CommandStatus {
     return this._status;
   }
+
   /**
    * Not using a setter because Mobx is raising a warning when using a setter even though it doesn't seem like the warning is in place. The warning is: [MobX] Since strict-mode is enabled, changing (observed) observable values without using an action is not allowed.
    */
@@ -87,7 +96,7 @@ export default class Command {
     this._status = newStatus;
   }
 
-  //#endregion
+  // #endregion
 
   public get killed(): boolean {
     return [
@@ -97,7 +106,7 @@ export default class Command {
     ].includes(this.status);
   }
 
-  //#region wasLastKilled property
+  // #region wasLastKilled property
 
   // private _wasManuallyKilled: boolean = false;
   // public get wasManuallyKilled(): boolean {
@@ -107,7 +116,7 @@ export default class Command {
   //   this._wasManuallyKilled = v;
   // }
 
-  //#endregion
+  // #endregion
 
   get isCommandDifferentThanWhenLastExecuted() {
     return this._lastCommandRun !== this.commandText;
@@ -133,7 +142,9 @@ export default class Command {
   killIfProcessStillRunning(killReason: "manual" | "next-command-closed", signal: string | number | undefined = undefined) {
     if (this.status !== CommandStatus.RUNNING) return;
 
-    treeKill(this.process!.pid, signal);
+    if (!this.process) throw new Error("Something went horribly wrong. This command's process member is falsey.");
+
+    treeKill(this.process.pid, signal);
 
     switch (killReason) {
       case "manual":
@@ -192,7 +203,7 @@ export default class Command {
     this.process.stdout?.on("data", saveCommandStdout);
     this.process.stderr?.on("data", saveCommandStderr);
     // this.process.stdin?.on('data', this.saveCommandStderr);
-    this.process.on("exit", (exitCode, _) => {
+    this.process.on("exit", (exitCode) => {
       if ([CommandStatus.KILLED_MANUALLY, CommandStatus.KILLED_NEXT_COMMAND_CLOSED].includes(this.status)) {
         // Status already set, do nothing.
       } else if (exitCode !== null) {
@@ -202,7 +213,7 @@ export default class Command {
       else console.error("Something weird is going on: the exitCode is null but this.process.killed is not true.");
     });
 
-    this.process.on("error", (...e: any) => {
+    this.process.on("error", (...e: unknown[]) => {
       console.warn(`error occured when running command "${this.commandText}"`, e);
       this.setStatus(CommandStatus.ERROR);
     });
@@ -211,7 +222,7 @@ export default class Command {
     this._precedingCommandsOnLastRun = precedingCommands ?? [];
   }
 
-  //#region input ref stuff
+  // #region input ref stuff
 
   private _inputRef?: React.RefObject<HTMLInputElement>;
 
@@ -223,7 +234,7 @@ export default class Command {
     this._inputRef?.current?.focus();
   }
 
-  //#endregion
+  // #endregion
 
   private _resetExecutionData() {
     this.stdout = undefined;

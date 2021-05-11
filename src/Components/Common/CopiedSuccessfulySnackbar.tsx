@@ -1,9 +1,7 @@
-import { Fade, Snackbar } from "@material-ui/core";
-import React from "react";
-import Alert from "@material-ui/lab/Alert";
-
-import { makeStyles } from "@material-ui/core";
+import { Fade, makeStyles, Snackbar } from "@material-ui/core";
 import { FileCopy as CopyIcon } from "@material-ui/icons";
+import Alert from "@material-ui/lab/Alert";
+import React from "react";
 
 const useStyles = makeStyles((_theme) => ({ copyToast: {} }));
 

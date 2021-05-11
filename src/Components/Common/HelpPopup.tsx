@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function HelpPopup({ title, text }: { title: string; text: string }) {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const [open, setOpen] = useState(false);
 
   const cls = useStyles();

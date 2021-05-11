@@ -1,20 +1,17 @@
-import React, { useState } from 'react';
-import { Button, ButtonProps, makeStyles } from '@material-ui/core';
-import { remote, OpenDialogOptions } from 'electron';
+import React, { useState } from "react";
+import { Button, ButtonProps, makeStyles } from "@material-ui/core";
+import { remote, OpenDialogOptions } from "electron";
+
 const { dialog } = remote;
 
 const useStyles = makeStyles({ root: {} });
 
-type BrowseButtonProps = Omit<ButtonProps, 'onClick'> & {
+type BrowseButtonProps = Omit<ButtonProps, "onClick"> & {
   onValue: (value: Electron.OpenDialogReturnValue) => void;
   dialogOptions: OpenDialogOptions;
 };
 
-export default function BrowseButton({
-  onValue,
-  dialogOptions,
-  ...rest
-}: BrowseButtonProps) {
+export default function BrowseButton({ onValue, dialogOptions, ...rest }: BrowseButtonProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const classes = useStyles();
@@ -24,12 +21,11 @@ export default function BrowseButton({
       variant="contained"
       className={classes.root}
       disabled={isDialogOpen}
-      onClick={() => {
+      onClick={async () => {
         setIsDialogOpen(true);
-        dialog.showOpenDialog(dialogOptions).then((ret) => {
-          setIsDialogOpen(false);
-          onValue(ret);
-        });
+        const ret = await dialog.showOpenDialog(dialogOptions);
+        setIsDialogOpen(false);
+        onValue(ret);
       }}
       {...rest}
     >

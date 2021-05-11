@@ -27,10 +27,10 @@ const CommandsPanel = observer(() => {
   if (!commandsExceptSkippedOnes.isEmpty()) {
     entireCommandText = commandsExceptSkippedOnes
       .map((cmd) => cmd.commandText)
-      .reduce((accumulator, cmdText) => accumulator + " | " + cmdText);
+      .reduce((accumulator, cmdText) => `${accumulator} | ${cmdText}`);
   }
 
-  const runButtonDisabled =
+  const shouldDisableRunButton =
     commandsExceptSkippedOnes.isEmpty() ||
     !piperStore.areCommandsValidToRun ||
     piperStore.everythingIsCachedNoNeedToRun ||
@@ -38,22 +38,22 @@ const CommandsPanel = observer(() => {
   let runButtonTooltip = "";
 
   const someCommandsAreNotValid = "Some commands are not valid";
-  if (runButtonDisabled) {
+  if (shouldDisableRunButton) {
     if (commandsExceptSkippedOnes.isEmpty()) runButtonTooltip = "All commands are commented out";
     else if (piperStore.everythingIsCachedNoNeedToRun) runButtonTooltip = "Everything is already cached";
     else if (!piperStore.areCommandsValidToRun) runButtonTooltip = someCommandsAreNotValid;
     else if (piperStore.isAnythingRunning) runButtonTooltip = "Some commands are still running";
   }
 
-  const [openCopySnackbar, setOpenCopySnackbar] = useState(false);
-  let copyFinalCommandButtonTooltip = !piperStore.areCommandsValidToRun ? someCommandsAreNotValid : "";
-  const copyFinalCommandButtonDisabled = !piperStore.areCommandsValidToRun;
+  const [shouldOpenCopySnackbar, setShouldOpenCopySnackbar] = useState(false);
+  const copyFinalCommandButtonTooltip = !piperStore.areCommandsValidToRun ? someCommandsAreNotValid : "";
+  const shouldDisableCopyFinalCommandButton = !piperStore.areCommandsValidToRun;
   const copyFinalCommand = () => {
     copyToClipboard(entireCommandText);
-    setOpenCopySnackbar(true);
+    setShouldOpenCopySnackbar(true);
   };
 
-  const removeAllCommandsButtonDisabled = piperStore.isAnythingRunning;
+  const shouldDisableRemoveAllCommandsButton = piperStore.isAnythingRunning;
   const plusDividersTitle =
     "Insert a new command here. When focused on a command, hitting `Enter` or `Ctrl+Alt+Down` will insert a new command below and hitting `Shift+Enter`, `Alt+Enter` or `Ctrl+Alt+Up` will insert a new command above.";
 
@@ -67,21 +67,21 @@ const CommandsPanel = observer(() => {
               // Run commands
               "ctrl+alt+enter",
               () => {
-                if (!runButtonDisabled) piperStore.runCommands();
+                if (!shouldDisableRunButton) piperStore.runCommands();
               },
             ],
             [
               // Remove all commands
               "ctrl+alt+d",
               () => {
-                if (!removeAllCommandsButtonDisabled) piperStore.removeAllCommands();
+                if (!shouldDisableRemoveAllCommandsButton) piperStore.removeAllCommands();
               },
             ],
             [
               // Copy final command
               "ctrl+alt+c",
               () => {
-                if (!copyFinalCommandButtonDisabled) copyFinalCommand();
+                if (!shouldDisableCopyFinalCommandButton) copyFinalCommand();
               },
             ],
           ]}
@@ -117,7 +117,7 @@ const CommandsPanel = observer(() => {
                 <Button
                   color="primary"
                   variant="contained"
-                  disabled={runButtonDisabled}
+                  disabled={shouldDisableRunButton}
                   onClick={() => piperStore.runCommands()}
                   title="Ctrl+Alt+Enter"
                 >
@@ -128,21 +128,21 @@ const CommandsPanel = observer(() => {
             <Tooltip title={copyFinalCommandButtonTooltip}>
               <span>
                 <Button
-                  disabled={copyFinalCommandButtonDisabled}
+                  disabled={shouldDisableCopyFinalCommandButton}
                   onClick={copyFinalCommand}
                   variant="outlined"
                   title="Ctrl+Alt+C"
                 >
                   Copy final command
                 </Button>
-                <CopiedSuccessfulySnackbar open={openCopySnackbar} onClose={() => setOpenCopySnackbar(false)} />
+                <CopiedSuccessfulySnackbar open={shouldOpenCopySnackbar} onClose={() => setShouldOpenCopySnackbar(false)} />
               </span>
             </Tooltip>
           </div>
           <Tooltip title={piperStore.isAnythingRunning ? "Can't remove all commands while some of them are still running" : ""}>
             <span>
               <Button
-                disabled={removeAllCommandsButtonDisabled}
+                disabled={shouldDisableRemoveAllCommandsButton}
                 onClick={() => piperStore.removeAllCommands()}
                 variant="outlined"
                 title="Ctrl+Alt+D"

@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+// eslint-disable-next-line import/no-cycle
 import Command from "./Command";
 import CommandStatus from "./CommandStatus";
 import { yieldPairs } from "./utils";
@@ -64,20 +65,23 @@ export class PiperStore {
 
   public commands: Command[] = [new Command(this)];
 
-  //#region WhatToDisplay stuff
+  // #region WhatToDisplay stuff
 
   private _whatToDisplay: { commandId: string; outputType: "stdout" | "stderr" } | undefined;
+
   public get whatToDisplay(): { commandId: string; outputType: "stdout" | "stderr" } | undefined {
     return this._whatToDisplay;
   }
+
   public set whatToDisplay(v: { commandId: string; outputType: "stdout" | "stderr" } | undefined) {
     this._whatToDisplay = v;
   }
+
   clearWhatToDisplay() {
     this.whatToDisplay = undefined;
   }
 
-  //#endregion
+  // #endregion
 
   constructor() {
     makeAutoObservable(this);
@@ -170,10 +174,11 @@ export class PiperStore {
       } else console.warn(`Error caught when passing output to the command "${targetCommandName}"`, { error, name: error.name });
     };
 
-    const indexOfCacheToUse = this.indexOfCacheToUse; // Extracted for use in lambda
+    const { indexOfCacheToUse } = this; // Extracted for use in lambda
 
-    if (this.useCache && indexOfCacheToUse !== null) {
+    if (this.shouldUseCache && indexOfCacheToUse !== null) {
       if (this.indexOfCacheToUse === this.indexOfLastCommandThatIsntMarkedForSkip) {
+        // eslint-disable-next-line no-console
         console.log("All commands already cached, no need to run, right?");
         return;
       }
@@ -218,7 +223,7 @@ export class PiperStore {
     }
 
     if (cacheToPassToFirstCommandToRun) {
-      //#region The shit I had to go through to capture errors that occur when writing to a process's stdin.
+      // #region The shit I had to go through to capture errors that occur when writing to a process's stdin.
       // async function safelyWriteCacheToFirstCommandStdinAndEndTheStream(
       //   stdin: Writable,
       //   data: string
@@ -258,7 +263,7 @@ export class PiperStore {
       //     firstCommandToRun.process.stdin,
       //     lastCachedCommand.stdout
       //   );
-      //#endregion
+      // #endregion
       firstCommandToRun.process?.stdin?.on("error", (error: Error & { code: string; errno: string; syscall: string }) =>
         handleStdinError(error, firstCommandToRun.commandText)
       );
@@ -274,7 +279,7 @@ export class PiperStore {
 
       if (!(currentCommand.process?.stdout && nextCommand.process?.stdin)) throw new Error("Something went wrong");
 
-      //#region Doing the following because calling currentCommand.process.stdout.pipe(nextCommand.process.stdin) might throw "Cannot call write after a stream was destroyed"
+      // #region Doing the following because calling currentCommand.process.stdout.pipe(nextCommand.process.stdin) might throw "Cannot call write after a stream was destroyed"
       const pipeToNextCommand = (chunk: any) => {
         if (!nextCommand.process?.stdin?.destroyed)
           // This condition is not necessary since the error will be caught somewhere else but it saves the log some unnecessary warnings.
@@ -298,32 +303,36 @@ export class PiperStore {
       currentCommand.process.stdout.on("close", () => {
         nextCommand.process?.stdin?.end();
       });
-      //#endregion
+      // #endregion
     }
 
     this.whatToDisplay = { commandId: lastCommandRun.id, outputType: "stdout" };
   }
 
-  //#region Cache stuff
+  // #region Cache stuff
 
-  private _useCache: boolean = false;
-  public get useCache(): boolean {
-    return this._useCache;
-  }
-  public set useCache(v: boolean) {
-    this._useCache = v;
+  private _shouldUseCache = false;
+
+  public get shouldUseCache(): boolean {
+    return this._shouldUseCache;
   }
 
-  private _indexOfDesiredCacheToUse: number = 0;
+  public set shouldUseCache(v: boolean) {
+    this._shouldUseCache = v;
+  }
+
+  private _indexOfDesiredCacheToUse = 0;
+
   public get indexOfDesiredCacheToUse(): number {
     return this._indexOfDesiredCacheToUse;
   }
+
   public set indexOfDesiredCacheToUse(v: number) {
     this._indexOfDesiredCacheToUse = v;
   }
 
   /** @returns {null} if no cache is available or if there are no commands (which should never happen, remember?) */
-  public get indexOfLastCommandWithValidCache() {
+  public get indexOfLastCommandWithValidCache(): number | null {
     return this.commands.findLastIndex((cmd) => cmd.isValidCacheAvailable && !cmd.skipThisCommand);
 
     /* for (let i = this.commands.indexOfLastItem(); i >= 0; i--) {
@@ -353,10 +362,10 @@ export class PiperStore {
   }
 
   public get everythingIsCachedNoNeedToRun() {
-    return this.useCache && this.indexOfCacheToUse === this.indexOfLastCommandThatIsntMarkedForSkip;
+    return this.shouldUseCache && this.indexOfCacheToUse === this.indexOfLastCommandThatIsntMarkedForSkip;
   }
 
-  //#endregion
+  // #endregion
 
   public getCommandById(id: string): Command {
     const commandFound = this.commands.find((cmd) => cmd.id === id);

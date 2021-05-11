@@ -21,6 +21,10 @@ import MousetrapWrapper from "../../Common/MousetrapWrapper";
 import { errorTheme } from "../../ThemeStuff/theme";
 import CuteRightPointingButton from "./CuteRightPointingButton";
 
+function confirmTheUserWantsToKillTheProcess() {
+  return window.confirm("Are you sure you want to stop this running process?");
+}
+
 const skipColor = "#6A9955";
 const useStyles = makeStyles((theme) => ({
   // commandAndOutputStuff: {
@@ -111,9 +115,9 @@ const SingleCommandPanel = observer(
       command.killIfProcessStillRunning("manual");
     };
 
-    //#region figure out the endAdornment
+    // #region figure out the endAdornment
 
-    let endAdornments = undefined;
+    let endAdornments;
 
     if (command.skipThisCommand) endAdornments = "";
     else if (command.status === CommandStatus.RUNNING)
@@ -133,12 +137,12 @@ const SingleCommandPanel = observer(
           {command.stderr ? (
             <IconButton
               className={cls.errorButton}
-              onClick={() =>
-                (piperStore.whatToDisplay = {
+              onClick={() => {
+                piperStore.whatToDisplay = {
                   commandId: command.id,
                   outputType: "stderr",
-                })
-              }
+                };
+              }}
             >
               <ErrorIcon />
             </IconButton>
@@ -179,7 +183,7 @@ const SingleCommandPanel = observer(
         </Tooltip>
       );
 
-    //#endregion
+    // #endregion
 
     const askRemoveCommand = () => {
       if (command.status === CommandStatus.RUNNING) {
@@ -193,16 +197,18 @@ const SingleCommandPanel = observer(
       else piperStore.commands[commandIndex - 1].focusOnThisCommandIfPossible();
     };
 
-    const toggleSkip = () => (command.skipThisCommand = !command.skipThisCommand);
+    const toggleSkip = () => {
+      command.skipThisCommand = !command.skipThisCommand;
+    };
 
     let selectedButton: "stdout" | "stderr" | null = null;
 
-    const whatToDisplay = piperStore.whatToDisplay;
+    const { whatToDisplay } = piperStore;
     if (!whatToDisplay || whatToDisplay.commandId !== command.id) selectedButton = null;
     else selectedButton = whatToDisplay.outputType;
 
-    const arrowUpDisabled = commandIndex === 0;
-    const arrowDownDisabled = commandIndex === piperStore.commands.indexOfLastItem();
+    const shouldDisableArrowUp = commandIndex === 0;
+    const shouldDisableArrowDown = commandIndex === piperStore.commands.indexOfLastItem();
     const moveUp = () => piperStore.moveCommandOnePositionUp(commandIndex);
     const moveDown = () => piperStore.moveCommandOnePositionDown(commandIndex);
     const focusOnPreviousCommand = () => {
@@ -231,6 +237,7 @@ const SingleCommandPanel = observer(
             // For debugging
             if (e.ctrlKey) {
               (window as any).cmd = command;
+              // eslint-disable-next-line no-console
               console.log(`Command #${commandIndex + 1}, "${command.commandText}" saved as "cmd": `, command);
             }
           }}
@@ -261,7 +268,9 @@ const SingleCommandPanel = observer(
               !command.isCommandDifferentThanWhenLastExecuted
             }
             value={command.commandText}
-            onChange={(e) => (command.commandText = e.target.value)}
+            onChange={(e) => {
+              command.commandText = e.target.value;
+            }}
             inputProps={{
               className: clsx(command.skipThisCommand && cls.skipColor),
             }}
@@ -285,8 +294,8 @@ const SingleCommandPanel = observer(
             <IconButton
               className={cls.moveArrow}
               title="Move command up (Alt+Up)"
-              disabled={arrowUpDisabled}
-              style={arrowUpDisabled ? { color: lighten("#000", 0.93) } : {}} // Not using classes/className because Material UI takes higher specificity
+              disabled={shouldDisableArrowUp}
+              style={shouldDisableArrowUp ? { color: lighten("#000", 0.93) } : {}} // Not using classes/className because Material UI takes higher specificity
               onClick={moveUp}
             >
               <KeyboardArrowUpRoundedIcon />
@@ -294,8 +303,8 @@ const SingleCommandPanel = observer(
             <IconButton
               className={cls.moveArrow}
               title="Move command down (Alt+Down)"
-              disabled={arrowDownDisabled}
-              style={arrowDownDisabled ? { color: lighten("#000", 0.93) } : {}} // Not using classes/className because Material UI takes higher specificity
+              disabled={shouldDisableArrowDown}
+              style={shouldDisableArrowDown ? { color: lighten("#000", 0.93) } : {}} // Not using classes/className because Material UI takes higher specificity
               onClick={moveDown}
             >
               <KeyboardArrowDownRoundedIcon />
@@ -314,12 +323,12 @@ const SingleCommandPanel = observer(
               className={cls.outputButton}
               selected={selectedButton === "stdout"}
               color={command.stdout ? "primary" : "default"}
-              onClick={() =>
-                (piperStore.whatToDisplay = {
+              onClick={() => {
+                piperStore.whatToDisplay = {
                   commandId: command.id,
                   outputType: "stdout",
-                })
-              }
+                };
+              }}
               classes={
                 command.stdout ? { outlinedPrimary: cls.buttonOutlinedPrimaryEnhanced } : { outlined: cls.buttonDimmedOutline }
               }
@@ -332,12 +341,12 @@ const SingleCommandPanel = observer(
                 selected={selectedButton === "stderr"}
                 color={command.stderr ? "primary" : "default"}
                 className={cls.outputButton}
-                onClick={() =>
-                  (piperStore.whatToDisplay = {
+                onClick={() => {
+                  piperStore.whatToDisplay = {
                     commandId: command.id,
                     outputType: "stderr",
-                  })
-                }
+                  };
+                }}
                 classes={command.stderr ? {} : { outlined: cls.buttonDimmedOutline }}
                 title="From the last run"
               >
@@ -352,7 +361,3 @@ const SingleCommandPanel = observer(
 );
 
 export default SingleCommandPanel;
-
-function confirmTheUserWantsToKillTheProcess() {
-  return confirm("Are you sure you want to stop this running process?");
-}

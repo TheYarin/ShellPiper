@@ -1,4 +1,3 @@
-import "./utils";
 import { yieldPairs } from "./utils";
 
 test("Array.prototype.skip basic case", () => {
@@ -44,6 +43,7 @@ test("yieldPairs #5", () => {
   expect(Array.from(yieldPairs([]))).toEqual([]);
 });
 
+// eslint-disable-next-line jest/no-commented-out-tests
 // test('splitting string to chunks #1', () => {
 //   expect(splitToChunks('12345678901234567890', 10)).toEqual([
 //     '1234567890',
@@ -51,6 +51,7 @@ test("yieldPairs #5", () => {
 //   ]);
 // });
 
+// eslint-disable-next-line jest/no-commented-out-tests
 // test('splitting string to chunks #2', () => {
 //   expect(splitToChunks('123456789012345678', 5)).toEqual([
 //     '12345',
@@ -69,11 +70,11 @@ test("Array.equals #2", () => {
 });
 
 test("Array.equals #3", () => {
-  expect(([] as any[]).equals([1])).toEqual(false);
+  expect(([] as number[]).equals([1])).toEqual(false);
 });
 
 test("Array.equals #4", () => {
-  expect(([1, 2, 3] as any[]).equals([1, 2])).toEqual(false);
+  expect(([1, 2, 3] as number[]).equals([1, 2])).toEqual(false);
 });
 
 test("Array.equals #5", () => {
@@ -101,7 +102,7 @@ test("Array.splitByPredicate #4", () => {
 });
 
 test("Array.splitByPredicate #5", () => {
-  expect([1, 2, 3, 4, 5].splitByPredicate((item, index) => index > 2)).toEqual([
+  expect([1, 2, 3, 4, 5].splitByPredicate((_item, index) => index > 2)).toEqual([
     [4, 5],
     [1, 2, 3],
   ]);

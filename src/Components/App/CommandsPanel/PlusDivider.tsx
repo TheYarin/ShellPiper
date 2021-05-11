@@ -1,19 +1,19 @@
-import { makeStyles, Divider, Button, ButtonProps } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import React from 'react';
+import { makeStyles, Divider, Button, ButtonProps } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   divider: {
-    position: 'absolute',
-    top: '50%',
-    width: '100%',
-    backgroundColor: '#444',
+    position: "absolute",
+    top: "50%",
+    width: "100%",
+    backgroundColor: "#444",
   },
   root: {
-    position: 'relative',
-    display: 'flex',
-    justifyContent: 'center',
-    margin: '6px 0',
+    position: "relative",
+    display: "flex",
+    justifyContent: "center",
+    margin: "6px 0",
   },
   button: {
     padding: 0,
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     height: 24,
   },
   buttonContained: {
-    '&$disabled': { backgroundColor: theme.palette.grey.A100 },
+    "&$disabled": { backgroundColor: theme.palette.grey.A100 },
   },
   disabled: {},
 }));

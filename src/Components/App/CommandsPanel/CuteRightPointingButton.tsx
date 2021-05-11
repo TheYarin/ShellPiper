@@ -1,32 +1,32 @@
-import React from 'react';
-import { Button, ButtonProps, makeStyles } from '@material-ui/core';
-import { ChevronRightRounded as ChevronRightRoundedIcon } from '@material-ui/icons';
-import clsx from 'clsx';
+import React from "react";
+import { Button, ButtonProps, makeStyles } from "@material-ui/core";
+import { ChevronRightRounded as ChevronRightRoundedIcon } from "@material-ui/icons";
+import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    textTransform: 'none',
+    textTransform: "none",
     borderRadius: 999,
     paddingLeft: 8,
     paddingRight: 6,
-    transition: theme.transitions.create('all', {
+    transition: theme.transitions.create("all", {
       duration: theme.transitions.duration.shorter,
     }),
   },
   arrow: {
-    '&$iconSizeSmall': {
+    "&$iconSizeSmall": {
       marginLeft: -2,
       marginRight: -4,
     },
   },
   iconSizeSmall: {},
   selected: {
-    pointerEvents: 'none',
-    boxShadow: 'none',
-    border: '1px solid transparent', // This fucker is necessary so the border won't flicker
+    pointerEvents: "none",
+    boxShadow: "none",
+    border: "1px solid transparent", // This fucker is necessary so the border won't flicker
   },
   backgroundDiv: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 999,
   },
 }));
@@ -37,7 +37,7 @@ export default function CuteRightPointingButton({
   className,
   classes,
   ...rest
-}: Omit<ButtonProps, 'variant'> & { selected: boolean }) {
+}: Omit<ButtonProps, "variant"> & { selected: boolean }) {
   const cls = useStyles();
 
   return (
@@ -45,7 +45,7 @@ export default function CuteRightPointingButton({
       <Button
         size="small"
         className={clsx(cls.root, selected && cls.selected, className)}
-        variant={selected ? 'contained' : 'outlined'}
+        variant={selected ? "contained" : "outlined"}
         disableRipple
         endIcon={<ChevronRightRoundedIcon />}
         classes={{

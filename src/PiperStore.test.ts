@@ -18,7 +18,7 @@ function generateTestingStore(...commands: string[]) {
 }
 
 async function whenAllCommandsAreFinished(store: PiperStore) {
-  return new Promise<void>((resolve, _reject) => {
+  return new Promise<void>((resolve) => {
     when(
       () => store.commands.every((cmd) => ![CommandStatus.RUNNING, CommandStatus.NEW].includes(cmd.status)),
       () => resolve()
@@ -48,6 +48,7 @@ test("write after stream close shouldn't happen", async () => {
   expect(store.commands[1].process?.exitCode).not.toEqual(0);
 });
 
+// eslint-disable-next-line jest/no-commented-out-tests
 // test('cache triggering', () => {
 //   const store = new PiperStore();
 //   store.insertNewCommand(0);

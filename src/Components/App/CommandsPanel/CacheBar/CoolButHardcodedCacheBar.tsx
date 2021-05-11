@@ -1,17 +1,17 @@
-import React from "react";
 import { Checkbox, makeStyles, Tooltip } from "@material-ui/core";
-import { observer } from "mobx-react";
-import { piperStore } from "../../../../PiperStore";
-import { flexCol, flexColCentered, spaceChildren } from "../../../../JssUtils";
 import { CSSProperties } from "@material-ui/core/styles/withStyles";
-import { BUTTON_HEIGHT, BUTTON_WIDTH, CacheBarButton, CacheBarButtonState } from "./CacheBarButton";
 import clsx from "clsx";
+import { observer } from "mobx-react";
+import React from "react";
+import { flexCol, flexColCentered, spaceChildren } from "../../../../JssUtils";
+import { piperStore } from "../../../../PiperStore";
+import { theme as appTheme } from "../../../ThemeStuff/theme";
+import { BUTTON_HEIGHT, BUTTON_WIDTH, CacheBarButton, CacheBarButtonState } from "./CacheBarButton";
 import { availableCacheBarColor, cacheToUseBarColor } from "./Constants";
-import { theme } from "../../../ThemeStuff/theme";
 
 // const BUTTON_MARGIN = 61;
 const COMMAND_HEIGHT = 106;
-const DISTANCE_BETWEEN_BUTTONS = COMMAND_HEIGHT - BUTTON_HEIGHT + 6; /*the 6 is necessary, no idea why.*/
+const DISTANCE_BETWEEN_BUTTONS = COMMAND_HEIGHT - BUTTON_HEIGHT + 6; /* the 6 is necessary, no idea why. */
 const BAR_WIDTH = BUTTON_WIDTH + 10;
 const ALIGNMENT_BUFFER = 34; // pure magic. // 0.5 * COMMAND_HEIGHT - 19 ?
 const CHECKBOX_HEIGHT = 24;
@@ -28,8 +28,8 @@ const barStyles: CSSProperties = {
   borderTopRightRadius: 5,
   borderBottomLeftRadius: BAR_WIDTH / 2,
   borderBottomRightRadius: BAR_WIDTH / 2,
-  transition: theme.transitions.create(["all"], {
-    duration: theme.transitions.duration.shortest,
+  transition: appTheme.transitions.create(["all"], {
+    duration: appTheme.transitions.duration.shortest,
   }),
   marginTop: 2,
 };
@@ -105,7 +105,7 @@ function calculateBarHeight(numberOfButtons: number) {
 function CoolButHardcodedCacheBar() {
   const cls = useStyles();
 
-  const { useCache, indexOfCacheToUse, indexOfDesiredCacheToUse, indexOfLastCommandWithValidCache } = piperStore;
+  const { shouldUseCache, indexOfCacheToUse, indexOfDesiredCacheToUse, indexOfLastCommandWithValidCache } = piperStore;
 
   const availableCacheBarHeight = calculateBarHeight(
     indexOfLastCommandWithValidCache === null ? 0 : indexOfLastCommandWithValidCache + 1
@@ -117,7 +117,7 @@ function CoolButHardcodedCacheBar() {
     let buttonState: CacheBarButtonState;
     let buttonTooltipText: string;
 
-    if (piperStore.useCache === false) {
+    if (piperStore.shouldUseCache === false) {
       buttonState = "disabled";
       buttonTooltipText = "";
     } else if (command.skipThisCommand) {
@@ -140,20 +140,27 @@ function CoolButHardcodedCacheBar() {
         className={cls.button}
         state={buttonState}
         tooltipText={buttonTooltipText}
-        onClick={() => (piperStore.indexOfDesiredCacheToUse = commandIndex)}
+        onClick={() => {
+          piperStore.indexOfDesiredCacheToUse = commandIndex;
+        }}
       />
     );
   });
 
   return (
-    <Tooltip title={piperStore.useCache ? "" : "Caching is disabled"} enterDelay={500} placement="top-end">
+    <Tooltip title={piperStore.shouldUseCache ? "" : "Caching is disabled"} enterDelay={500} placement="top-end">
       <div
-        className={clsx(cls.root, piperStore.useCache && cls.useCache, piperStore.isAnythingRunning && cls.pointerEventsNone)}
+        className={clsx(
+          cls.root,
+          piperStore.shouldUseCache && cls.useCache,
+          piperStore.isAnythingRunning && cls.pointerEventsNone
+        )}
         onDoubleClick={(e) => {
           // For debugging
           if (e.ctrlKey)
+            // eslint-disable-next-line no-console
             console.log(`Cache info: `, {
-              useCache,
+              useCache: shouldUseCache,
               indexOfCacheToUse,
               indexOfDesiredCacheToUse,
               indexOfLastCommandWithValidCache,
@@ -170,17 +177,19 @@ function CoolButHardcodedCacheBar() {
         <div
           className={cls.cacheToUseBar}
           style={{
-            height: piperStore.useCache ? cacheToUseBarHeight : 0,
-            opacity: piperStore.useCache ? 1 : 0,
+            height: piperStore.shouldUseCache ? cacheToUseBarHeight : 0,
+            opacity: piperStore.shouldUseCache ? 1 : 0,
           }}
         />
         <div className={cls.buttonsAndCheckboxWrapper}>
-          <Tooltip title={"Use Cache"} placement="right">
+          <Tooltip title="Use Cache" placement="right">
             <Checkbox
-              checked={piperStore.useCache}
+              checked={piperStore.shouldUseCache}
               color="primary"
               className={cls.checkbox}
-              onChange={(e) => (piperStore.useCache = e.target.checked)}
+              onChange={(e) => {
+                piperStore.shouldUseCache = e.target.checked;
+              }}
             />
           </Tooltip>
           <div className={cls.buttonsWrapper}>{buttons}</div>

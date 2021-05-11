@@ -1,13 +1,13 @@
-import React, { ReactComponentElement, useState } from "react";
-import { Fab, Fade, makeStyles, Snackbar } from "@material-ui/core";
-import { copyToClipboard } from "../../utils";
+import { Fab, makeStyles } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import { FileCopy as CopyIcon } from "@material-ui/icons";
 import { observer } from "mobx-react";
+import React, { useState } from "react";
 import { piperStore } from "../../PiperStore";
-import Alert from "@material-ui/lab/Alert";
+import { copyToClipboard } from "../../utils";
 import CopiedSuccessfulySnackbar from "../Common/CopiedSuccessfulySnackbar";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     position: "relative",
     height: "100%",
@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const OutputPanel = observer((/* { output }: { output: string } */) => {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const [openCopySnackbar, setOpenCopySnackbar] = useState(false);
 
   let output: string | undefined;
@@ -51,7 +52,7 @@ const OutputPanel = observer((/* { output }: { output: string } */) => {
 
   return (
     <div className={cls.root}>
-      <pre className={cls.pre} title="Double tap `Escape` to clear" tabIndex="-1" /*for nav keys to work*/>
+      <pre className={cls.pre} title="Double tap `Escape` to clear" tabIndex={-1} /* for nav keys to work */>
         {output}
       </pre>
       <Fab
@@ -60,7 +61,9 @@ const OutputPanel = observer((/* { output }: { output: string } */) => {
         size="small"
         color="primary"
         onClick={() => {
-          copyToClipboard(output!);
+          if (!output) throw new Error("Shouldn't happen because of the 'disabled' prop");
+
+          copyToClipboard(output);
           setOpenCopySnackbar(true);
         }}
       >
