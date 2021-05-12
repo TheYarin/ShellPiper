@@ -1,6 +1,7 @@
 // Shamelessly stolen from N1TZANKL's kippa-aduma
 
-// import { PaletteColor } from "@material-ui/core/styles/createPalette";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { PaletteColor } from "@material-ui/core/styles/createPalette"; // For some reason tsc shows seemingly unrelated issues if I comment out this import.
 
 // declare module '@material-ui/core/styles/createPalette' {
 //   interface Palette {

@@ -11,8 +11,8 @@
     "pretty": true,
     "sourceMap": true,
     /* Additional Checks */
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    // "noUnusedLocals": true, // Enforced by eslint
+    // "noUnusedParameters": true, // Enforced by eslint
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     /* Module Resolution Options */
@@ -20,14 +20,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "allowJs": true,
+    "allowJs": true
   },
-  "exclude": [
-    "test",
-    "release",
-    "src/main.prod.js",
-    "src/renderer.prod.js",
-    "src/dist",
-    ".erb/dll"
-  ]
+  "exclude": ["test", "release", "src/main.prod.js", "src/renderer.prod.js", "src/dist", ".erb/dll"]
 }
