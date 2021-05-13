@@ -16,8 +16,13 @@ To enable caching, check the box at the top of the cache bar at the left.
 ### Windows
 
 1. Download the latest `.exe` version from the [releases page](https://github.com/TheYarin/ShellPiper/releases)
+
 1. Running it will install ShellPiper on your machine.
-1. You might get a "Windows protected your PC" pop up. I never told Microsoft I was making ShellPiper so it makes sense they won't recognize it.
+
+1. You might get a "Windows protected your PC" pop up. I never told Microsoft I was making ShellPiper so it makes sense they won't recognize it. You can continue to the installation process by clicking on `More info` and then the `Run anyway` button will appear.
+
+1. Now ShellPiper will automatically be installed on your machine, probably in the following path:  
+   `C:\Users\<YOUR USERNAME>\AppData\Local\Programs\shell-piper`
 
 ### Linux
 
