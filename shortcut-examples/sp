@@ -1,2 +1,2 @@
 #!/bin/sh
-"C:\path\to\ShellPiper.exe"
+"/path/to/ShellPiper.exe"
