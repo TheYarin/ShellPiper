@@ -38,15 +38,15 @@ Usage is most fun when you can simply run `sp` in your terminal and ShellPiper s
 
 #### cmd.exe
 
-Put [`sp.cmd`](/shortcuts/sp.cmd) in a directory that is in your Path and edit it so the path points to the installed exe.
+Put [`sp.cmd`](/shortcut-examples/sp.cmd) in a directory that is in your Path and edit it so the path points to the installed exe.
 
 #### Git Bash
 
-Put [`sp`](/shortcuts/sp) in a directory that is in your Path and edit it so the path points to the installed exe.
+Put [`sp`](/shortcut-examples/sp) in a directory that is in your Path and edit it so the path points to the installed exe.
 
 ### Linux
 
-Put [`sp`](/shortcuts/sp) in a directory that is in your Path and edit it so the path points to the downloaded AppImage file.
+Put [`sp`](/shortcut-examples/sp) in a directory that is in your Path and edit it so the path points to the downloaded AppImage file.
 
 ## Mac Support
 
