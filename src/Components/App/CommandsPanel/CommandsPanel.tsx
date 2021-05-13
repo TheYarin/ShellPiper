@@ -72,7 +72,7 @@ const CommandsPanel = observer(() => {
             ],
             [
               // Remove all commands
-              "ctrl+alt+d",
+              ["ctrl+alt+d", "ctrl+shift+d" /* Because ctrl+alt+d is already taken in Ubuntu */],
               () => {
                 if (!shouldDisableRemoveAllCommandsButton) piperStore.removeAllCommands();
               },
