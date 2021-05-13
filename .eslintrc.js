@@ -71,6 +71,7 @@ module.exports = {
     "import/no-cycle": "warn",
     "@typescript-eslint/no-explicit-any": "off",
     "no-console": ["warn", { allow: ["warn", "error"] }],
+    "spaced-comment": "warn",
   },
   parserOptions: {
     ecmaVersion: 2020,
