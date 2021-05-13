@@ -35,8 +35,8 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        run: |
-          yarn install --prefer-offline
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install --prefer-offline
 
       - name: Publish releases
         env:
