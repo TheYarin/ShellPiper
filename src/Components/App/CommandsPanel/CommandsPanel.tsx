@@ -145,7 +145,7 @@ const CommandsPanel = observer(() => {
                 disabled={shouldDisableRemoveAllCommandsButton}
                 onClick={() => piperStore.removeAllCommands()}
                 variant="outlined"
-                title="Ctrl+Alt+D"
+                title="Ctrl+Alt+D or Ctrl+Shift+D"
               >
                 Remove all commands
               </Button>
