@@ -9,7 +9,7 @@ Instead of tweaking a long pipe chain in the terminal, use ShellPiper to create 
 
 ShellPiper saves the stdout of every command in the chain and lets you re-use this output later.
 The cache bar is pretty smart, it will only let you use the cached output of a command if all the commands above it are the same as they were the last time the command was executed.
-To enable caching, check the box at the top of the cache bar at the left.
+To enable caching, check the box at the top of the cache bar on the left.
 
 ## Installation
 
