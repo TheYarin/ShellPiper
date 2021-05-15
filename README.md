@@ -36,7 +36,7 @@ Usage is most fun when you can simply run `sp` in your terminal and ShellPiper s
 
 ### Windows
 
-#### cmd.exe
+#### CMD
 
 Put [`sp.cmd`](/shortcut-examples/sp.cmd) in a directory that is in your Path and edit it so the path points to the installed exe.
 
@@ -51,6 +51,11 @@ Put [`sp`](/shortcut-examples/sp) in a directory that is in your Path and edit i
 ## Mac Support
 
 ShellPiper _should_ work on Mac using the `.dmg` version from the [releases page](https://github.com/TheYarin/ShellPiper/releases). But I never properly tested it on Mac, so... try it yourself and let me know 😁
+
+## Changing the default shell
+
+The default shell is `/bin/sh` on Unix, and `%COMSPEC%` (CMD, unless you changed it) on Windows.
+You can change the shell by changing the "Shell Program" option in the settings panel.
 
 ## Known Issues
 
