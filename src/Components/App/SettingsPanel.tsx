@@ -127,7 +127,7 @@ const SettingsPanel = observer(() => {
             }}
           />
           <TextField
-            label="Path environment variable"
+            label="PATH environment variable"
             variant="outlined"
             value={piperStore.pathEnvVar || ""}
             onChange={(e) => {
