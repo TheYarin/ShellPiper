@@ -38,10 +38,13 @@ const useStyles = makeStyles((theme) => ({
     padding: 5,
     ...spaceChildren(5),
   },
-  deleteButton: {
+  removeButton: {
     // margin: 10,
     ...lowProfileButtonColors(theme),
     padding: 2,
+  },
+  removeButtonDisabled: {
+    color: "rgba(0, 0, 0, 0.15)", // To better contrast with the normal mode
   },
   errorButton: { color: "red", padding: 0 },
   stopCommandButton: { paddingRight: 16 }, // to make up for the thumb sticking out, feels unnatural
@@ -94,11 +97,17 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 4,
     height: "unset",
     width: "unset",
+
+    "&$disableChanges": {
+      pointerEvents: "none",
+    },
   },
   skipColor: { color: skipColor },
   skipBackgroundColor: { backgroundColor: lighten("#000", 0.93) },
   moveArrowsContainer: { ...flexCol },
   moveArrow: { padding: 0, ...lowProfileButtonColors(theme) },
+
+  disableChanges: {},
 }));
 
 const SingleCommandPanel = observer(
@@ -206,8 +215,8 @@ const SingleCommandPanel = observer(
     if (!whatToDisplay || whatToDisplay.commandId !== command.id) selectedButton = null;
     else selectedButton = whatToDisplay.outputType;
 
-    const shouldDisableArrowUp = commandIndex === 0;
-    const shouldDisableArrowDown = commandIndex === piperStore.commands.indexOfLastItem();
+    const shouldDisableArrowUp = commandIndex === 0 || disableChanges;
+    const shouldDisableArrowDown = commandIndex === piperStore.commands.indexOfLastItem() || disableChanges;
     const moveUp = () => piperStore.moveCommandOnePositionUp(commandIndex);
     const moveDown = () => piperStore.moveCommandOnePositionDown(commandIndex);
     const focusOnPreviousCommand = () => {
@@ -278,7 +287,7 @@ const SingleCommandPanel = observer(
               title: command.skipThisCommand ? "This command will be skipped" : "",
               startAdornment: (
                 <Icon
-                  className={clsx(cls.skipButton, command.skipThisCommand && cls.skipColor)}
+                  className={clsx(cls.skipButton, command.skipThisCommand && cls.skipColor, disableChanges && cls.disableChanges)}
                   onClick={toggleSkip}
                   title={`Click to ${command.skipThisCommand ? "un-" : ""}skip this command (Ctrl+/)`}
                 >
@@ -310,9 +319,10 @@ const SingleCommandPanel = observer(
             </IconButton>
           </div>
           <IconButton
-            className={cls.deleteButton}
+            className={cls.removeButton}
             onClick={askRemoveCommand}
             disabled={disableChanges}
+            classes={{ disabled: cls.removeButtonDisabled }}
             title="Remove this command (`Ctrl+D`, `Alt+Del` or `Alt+Backspace`)"
           >
             <DeleteIcon />
