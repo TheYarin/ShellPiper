@@ -193,8 +193,7 @@ const SingleCommandPanel = observer(
 
       piperStore.removeCommand(commandIndex);
 
-      if (commandIndex === 0) piperStore.commands[0].focusOnThisCommandIfPossible();
-      else piperStore.commands[commandIndex - 1].focusOnThisCommandIfPossible();
+      piperStore.commands[Math.min(commandIndex, piperStore.commands.indexOfLastItem())].focusOnThisCommandIfPossible();
     };
 
     const toggleSkip = () => {
