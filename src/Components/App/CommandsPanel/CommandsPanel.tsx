@@ -86,13 +86,17 @@ const CommandsPanel = observer(() => {
             ],
           ]}
         >
+          <PlusDivider
+            onClick={() => piperStore.insertNewCommand(0)}
+            disabled={piperStore.isAnythingRunning}
+            title={plusDividersTitle}
+          />
           {piperStore.commands.map((cmd, index) => {
             const insertCommandAbove = () => piperStore.insertNewCommand(index);
             const insertCommandBelow = () => piperStore.insertNewCommand(index + 1);
 
             return (
               <div key={cmd.id}>
-                <PlusDivider onClick={insertCommandAbove} disabled={piperStore.isAnythingRunning} title={plusDividersTitle} />
                 <MousetrapWrapper
                   shortcutsAndHandlers={[
                     [["ctrl+alt+up", "alt+enter", "shift+enter"], insertCommandAbove],
@@ -101,15 +105,12 @@ const CommandsPanel = observer(() => {
                 >
                   <SingleCommandPanel command={cmd} commandIndex={index} disableChanges={piperStore.isAnythingRunning} />
                 </MousetrapWrapper>
+                <PlusDivider onClick={insertCommandBelow} disabled={piperStore.isAnythingRunning} title={plusDividersTitle} />
               </div>
             );
           })}
         </MousetrapWrapper>
-        <PlusDivider
-          onClick={() => piperStore.insertNewCommand(piperStore.commands.length)}
-          disabled={piperStore.isAnythingRunning}
-          title={plusDividersTitle}
-        />
+
         <div className={cls.actionButtons}>
           <div className={cls.mainActionButtons}>
             <Tooltip title={runButtonTooltip}>
