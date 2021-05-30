@@ -267,7 +267,7 @@ export class PiperStore {
       firstCommandToRun.process?.stdin?.on("error", (error: Error & { code: string; errno: string; syscall: string }) =>
         handleStdinError(error, firstCommandToRun.commandText)
       );
-      firstCommandToRun.process?.stdin?.end(cacheToPassToFirstCommandToRun);
+      process.nextTick(() => firstCommandToRun.process?.stdin?.end(cacheToPassToFirstCommandToRun)); // If I don't wrap it with `nextTick()`, the call to `end()` doesn't properly trigger the "finish" behavior of stdin on Ubuntu. Unfortunately I couldn't reproduce this issue in a unit test, nor in a nodejs interpreter. It feels like a bug, but I couldn't narrow it down to child_process/WritableStream/nodejs/electron.
     }
 
     let lastCommandRun = firstCommandToRun;
