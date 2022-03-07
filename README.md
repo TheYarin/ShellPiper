@@ -1,14 +1,14 @@
 # ShellPiper - The Piping Editor
 
-ShellPiper is an editor for writing long pipe one-liners in the shell.
+ShellPiper is an editor for writing long pipe one-liners in the shell.  
 Instead of tweaking a long pipe chain in the terminal, use ShellPiper to create and tweak it with ease (and caching!).
 
 ![shellpiper](/pictures/shellpiper1.png)
 
 ## Caching
 
-ShellPiper saves the stdout of every command in the chain and lets you re-use this output later.
-The cache bar is pretty smart, it will only let you use the cached output of a command if all the commands above it are the same as they were the last time the command was executed.
+ShellPiper saves the stdout of every command in the chain and lets you re-use this output later.  
+The cache bar is pretty smart, it will only let you use the cached output of a command if all the commands above it are the same as they were the last time the command was executed.  
 To enable caching, check the box at the top of the cache bar on the left.
 
 ## Installation
@@ -27,7 +27,7 @@ To enable caching, check the box at the top of the cache bar on the left.
 ### Linux
 
 1. Download the latest `.AppImage` version from the [releases page](https://github.com/TheYarin/ShellPiper/releases)
-1. `chmod +x` the downloaded `.AppImage` file to allow it's execution
+1. `chmod +x` the downloaded `.AppImage` file to allow its execution
 1. That's it, now you can run this ShellPiper binary.
 
 ## Adding a shortcut to PATH
@@ -50,7 +50,7 @@ Put [`sp`](/shortcut-examples/sp) in a directory that is in your Path and edit i
 
 ## Mac Support
 
-ShellPiper _should_ work on Mac using the `.dmg` version from the [releases page](https://github.com/TheYarin/ShellPiper/releases). But I never properly tested it on Mac, so... try it yourself and let me know 😁
+ShellPiper works on Mac using the `.dmg` version from the [releases page](https://github.com/TheYarin/ShellPiper/releases). I didn't test it as thoroughly on Mac though, so... try it yourself and let me know if there are any issues 😁
 
 ## Changing the default shell
 
@@ -63,7 +63,7 @@ You can change the shell by changing the "Shell Program" option in the settings 
 
 Some programs buffer their output when they detect their output is piped. For now I only noticed this behavior on Git Bash's (Windows) implementations of `grep`, `find` etc. This will look like the command is producing no output, but the output will appear once the buffer is flushed, either when enough output is written or when the process exits.
 
-Workaround is program dependant. For example, `grep` can take a `--line-buffered` argument that tells it to flush output on every line.
+Workaround is program dependant. For example, `grep` can take a `--line-buffered` argument that tells it to flush output on every line.  
 If this occurs on Linux, The `unbuffer` command (which comes as part of the `expect` package) might be able to do the trick for you.
 
 ### The ShellPiper UI is super laggy when a command outputs a ton of output
